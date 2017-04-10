@@ -1,0 +1,17 @@
+
+
+
+welcome: "Hi this is a mortgage calculator!"
+loan_amount_input: "Please enter the loan amount in dollars (ex. $100,000):"
+loan_amount_error: "Sorry, you entered an invalid amount. Try again..."
+loan_rate_input: "Please enter Annual Percentage Rate (ex. 5.5%):"
+loan_rate_error: "Sorry, you entered an invalid rate..."
+loan_duration_input: "Please enter the loan duration in years:"
+loan_duration_error: "Sorry, you entered an invalid duration..."
+calculate_again?: "Would you like to calculate another payment with new terms?"
+goodbye: "Thanks for using this calculator. See you next time!"
+
+
+
+
+
