@@ -54,13 +54,14 @@ end
 
 def calculate_payment(loan_amount, monthly_rate, loan_duration)
   numerator = loan_amount * monthly_rate
-  denominator = (1 - (1 + monthly_rate)**(-loan_duration))
+  denominator = (1 - (1 + monthly_rate)**-loan_duration)
   (numerator / denominator).round(2)
 end
 
 def format_payment(unformated_payment)
   number_part, decimal_part = unformated_payment.to_s.split('.')
-  '$' + number_part.reverse.scan(/\d{1,3}/).join(',').reverse + '.' + decimal_part
+  number_part_with_comma = number_part.reverse.scan(/\d{1,3}/).join(',').reverse
+  '$' + number_part_with_comma + '.' + decimal_part
 end
 
 prompt('welcome')
