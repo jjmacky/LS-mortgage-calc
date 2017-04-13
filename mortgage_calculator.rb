@@ -24,31 +24,31 @@ def prompt(message)
   puts("=> #{messages(message)}")
 end
 
+def read_number(number)
+  number.scan(/\d+|\./).join('')
+end
+
+def integer?(num)
+  num.to_i.to_s == num
+end
+
+def float?(num)
+  num.to_f.to_s == num
+end
+
 def valid_number?(num)
-  Float(num) rescue false
+  integer?(num) || float?(num)
 end
 
-def read_amount(loan_amount)
-  loan_amount.gsub(/\D/, '')
-end
-
-def convert_amount(loan_amount)
+def amount_to_float(loan_amount)
   loan_amount.to_f
 end
 
-def read_rate(rate)
-  rate.scan(/\d+|\./).join('')
-end
-
-def convert_rate(rate)
+def apr_to_monthly(rate)
   (rate.to_f / 100) / 12
 end
 
-def read_duration(loan_duration)
-  loan_duration.gsub(/\D/, '')
-end
-
-def convert_duration(loan_duration)
+def duration_to_month(loan_duration)
   loan_duration.to_f * 12
 end
 
@@ -70,9 +70,9 @@ loop do
   loan_amount = ''
   loop do
     prompt('loan_amount_input')
-    loan_amount = read_amount(gets.chomp)
+    loan_amount = read_number(gets.chomp)
     if valid_number?(loan_amount)
-      loan_amount = convert_amount(loan_amount)
+      loan_amount = amount_to_float(loan_amount)
       break
     else
       prompt('loan_amount_error')
@@ -82,10 +82,14 @@ loop do
   monthly_rate = ''
   loop do
     prompt('loan_rate_input')
-    monthly_rate = read_rate(gets.chomp)
+    monthly_rate = read_number(gets.chomp)
     if valid_number?(monthly_rate)
-      monthly_rate = convert_rate(monthly_rate)
-      break
+      if monthly_rate == '0'
+        prompt('zero_rate_error')
+      else
+        monthly_rate = apr_to_monthly(monthly_rate)
+        break
+      end
     else
       prompt('loan_rate_error')
     end
@@ -94,10 +98,14 @@ loop do
   loan_duration = ''
   loop do
     prompt('loan_duration_input')
-    loan_duration = read_duration(gets.chomp)
+    loan_duration = read_number(gets.chomp)
     if valid_number?(loan_duration)
-      loan_duration = convert_duration(loan_duration)
-      break
+      if loan_duration == '0'
+        prompt('zero_duration_error')
+      else
+        loan_duration = duration_to_month(loan_duration)
+        break
+      end
     else
       prompt('loan_duration_error')
     end
@@ -106,9 +114,17 @@ loop do
   monthly_payment = calculate_payment(loan_amount, monthly_rate, loan_duration)
   puts("Your monthly payment is #{format_payment(monthly_payment)}.")
 
-  prompt('calculate_again?')
-  answer = gets.chomp
-  break unless answer.downcase.start_with?('y')
+  answer = ''
+  loop do
+    prompt('calculate_again?')
+    answer = gets.chomp.downcase
+    if answer == 'yes' || answer == 'no'
+      break
+    else
+      prompt('trouble_exiting')
+    end
+  end
+  break unless answer == 'yes'
 end
 
 prompt('goodbye')
